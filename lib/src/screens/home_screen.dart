@@ -5,9 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/task_provider.dart';
 import '../widgets/task_card.dart';
 import 'settings_screen.dart';
+import 'task_detail_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,7 +40,10 @@ class HomeScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // タスク追加画面への遷移（必要に応じて実装）
+          // TaskDetailScreen に遷移してタスクを追加
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const TaskDetailScreen()),
+          );
         },
         child: const Icon(Icons.add),
       ),
