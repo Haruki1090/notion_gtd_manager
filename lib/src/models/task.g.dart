@@ -15,6 +15,7 @@ _$TaskImpl _$$TaskImplFromJson(Map<String, dynamic> json) => _$TaskImpl(
           : DateTime.parse(json['dueDate'] as String),
       priority: json['priority'] as String?,
       description: json['description'] as String?,
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$$TaskImplToJson(_$TaskImpl instance) =>
@@ -25,4 +26,5 @@ Map<String, dynamic> _$$TaskImplToJson(_$TaskImpl instance) =>
       'dueDate': instance.dueDate?.toIso8601String(),
       'priority': instance.priority,
       'description': instance.description,
+      'tags': instance.tags,
     };

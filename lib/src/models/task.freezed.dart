@@ -23,11 +23,11 @@ mixin _$Task {
   String get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get status =>
-      throw _privateConstructorUsedError; // 例: "Inbox", "Next Action", "Waiting", "Completed"
+      throw _privateConstructorUsedError; // 例: InBox, Next Action, Waiting, Completed
   DateTime? get dueDate => throw _privateConstructorUsedError;
-  String? get priority =>
-      throw _privateConstructorUsedError; // 例: "あか", "はいいろ" など、カラーコード名
+  String? get priority => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
+  List<String>? get tags => throw _privateConstructorUsedError;
 
   /// Serializes this Task to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -49,7 +49,8 @@ abstract class $TaskCopyWith<$Res> {
       String status,
       DateTime? dueDate,
       String? priority,
-      String? description});
+      String? description,
+      List<String>? tags});
 }
 
 /// @nodoc
@@ -73,6 +74,7 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
     Object? dueDate = freezed,
     Object? priority = freezed,
     Object? description = freezed,
+    Object? tags = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -99,6 +101,10 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      tags: freezed == tags
+          ? _value.tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ) as $Val);
   }
 }
@@ -116,7 +122,8 @@ abstract class _$$TaskImplCopyWith<$Res> implements $TaskCopyWith<$Res> {
       String status,
       DateTime? dueDate,
       String? priority,
-      String? description});
+      String? description,
+      List<String>? tags});
 }
 
 /// @nodoc
@@ -137,6 +144,7 @@ class __$$TaskImplCopyWithImpl<$Res>
     Object? dueDate = freezed,
     Object? priority = freezed,
     Object? description = freezed,
+    Object? tags = freezed,
   }) {
     return _then(_$TaskImpl(
       id: null == id
@@ -163,6 +171,10 @@ class __$$TaskImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      tags: freezed == tags
+          ? _value._tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -176,7 +188,9 @@ class _$TaskImpl implements _Task {
       required this.status,
       this.dueDate,
       this.priority,
-      this.description});
+      this.description,
+      final List<String>? tags})
+      : _tags = tags;
 
   factory _$TaskImpl.fromJson(Map<String, dynamic> json) =>
       _$$TaskImplFromJson(json);
@@ -187,18 +201,26 @@ class _$TaskImpl implements _Task {
   final String title;
   @override
   final String status;
-// 例: "Inbox", "Next Action", "Waiting", "Completed"
+// 例: InBox, Next Action, Waiting, Completed
   @override
   final DateTime? dueDate;
   @override
   final String? priority;
-// 例: "あか", "はいいろ" など、カラーコード名
   @override
   final String? description;
+  final List<String>? _tags;
+  @override
+  List<String>? get tags {
+    final value = _tags;
+    if (value == null) return null;
+    if (_tags is EqualUnmodifiableListView) return _tags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'Task(id: $id, title: $title, status: $status, dueDate: $dueDate, priority: $priority, description: $description)';
+    return 'Task(id: $id, title: $title, status: $status, dueDate: $dueDate, priority: $priority, description: $description, tags: $tags)';
   }
 
   @override
@@ -213,13 +235,14 @@ class _$TaskImpl implements _Task {
             (identical(other.priority, priority) ||
                 other.priority == priority) &&
             (identical(other.description, description) ||
-                other.description == description));
+                other.description == description) &&
+            const DeepCollectionEquality().equals(other._tags, _tags));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, title, status, dueDate, priority, description);
+  int get hashCode => Object.hash(runtimeType, id, title, status, dueDate,
+      priority, description, const DeepCollectionEquality().hash(_tags));
 
   /// Create a copy of Task
   /// with the given fields replaced by the non-null parameter values.
@@ -244,7 +267,8 @@ abstract class _Task implements Task {
       required final String status,
       final DateTime? dueDate,
       final String? priority,
-      final String? description}) = _$TaskImpl;
+      final String? description,
+      final List<String>? tags}) = _$TaskImpl;
 
   factory _Task.fromJson(Map<String, dynamic> json) = _$TaskImpl.fromJson;
 
@@ -253,13 +277,15 @@ abstract class _Task implements Task {
   @override
   String get title;
   @override
-  String get status; // 例: "Inbox", "Next Action", "Waiting", "Completed"
+  String get status; // 例: InBox, Next Action, Waiting, Completed
   @override
   DateTime? get dueDate;
   @override
-  String? get priority; // 例: "あか", "はいいろ" など、カラーコード名
+  String? get priority;
   @override
   String? get description;
+  @override
+  List<String>? get tags;
 
   /// Create a copy of Task
   /// with the given fields replaced by the non-null parameter values.

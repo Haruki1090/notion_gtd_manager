@@ -8,10 +8,11 @@ class Task with _$Task {
   const factory Task({
     required String id,
     required String title,
-    required String status, // 例: "Inbox", "Next Action", "Waiting", "Completed"
+    required String status, // 例: InBox, Next Action, Waiting, Completed
     DateTime? dueDate,
-    String? priority, // 例: "あか", "はいいろ" など、カラーコード名
+    String? priority,
     String? description,
+    List<String>? tags,
   }) = _Task;
 
   factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
