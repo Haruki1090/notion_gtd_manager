@@ -30,6 +30,13 @@ class FirebaseAuthService {
     return userCredential.user;
   }
 
+  // メール／パスワードでサインイン
+  Future<User?> signInWithEmailPassword(String email, String password) async {
+    final UserCredential userCredential = await _auth
+        .signInWithEmailAndPassword(email: email, password: password);
+    return userCredential.user;
+  }
+
   // メール/パスワードでの新規登録
   Future<User?> registerWithEmailPassword(String email, String password) async {
     final UserCredential userCredential =
