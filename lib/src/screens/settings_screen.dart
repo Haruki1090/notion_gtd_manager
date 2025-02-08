@@ -1,12 +1,12 @@
-// lib/src/screens/settings_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/theme.dart';
+import '../services/firebase_auth_service.dart';
 import '../services/notion_api_service.dart';
 
 class SettingsScreen extends ConsumerWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +29,14 @@ class SettingsScreen extends ConsumerWidget {
             title: const Text('Notion 連携解除'),
             onTap: () {
               ref.read(notionApiServiceProvider).clearAccessToken();
-              // 必要に応じて UI の更新処理を追加
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Notion連携を解除しました')));
+            },
+          ),
+          ListTile(
+            title: const Text('Logout'),
+            onTap: () async {
+              await FirebaseAuthService().signOut();
             },
           ),
         ],
