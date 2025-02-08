@@ -10,7 +10,6 @@ final taskListProvider =
 
 class TaskListNotifier extends StateNotifier<List<Task>> {
   final Ref ref;
-
   TaskListNotifier(this.ref) : super([]) {
     loadTasks();
   }
@@ -49,5 +48,11 @@ class TaskListNotifier extends StateNotifier<List<Task>> {
     } catch (e) {
       print('Error deleting task: $e');
     }
+  }
+
+  // タスクを完了としてマークする（status を "Completed" に更新）
+  Future<void> completeTask(Task task) async {
+    final updatedTask = task.copyWith(status: 'Completed');
+    await updateTask(updatedTask);
   }
 }
