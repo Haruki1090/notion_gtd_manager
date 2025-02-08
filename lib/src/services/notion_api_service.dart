@@ -1,4 +1,3 @@
-// lib/src/services/notion_api_service.dart
 import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -39,33 +38,35 @@ class NotionApiService {
       final data = jsonDecode(response.body);
       List<Task> tasks = [];
       for (var result in data['results']) {
-        // タイトルの取得：リストが空の場合は空文字を返す
         final List<dynamic>? titleList = result['properties']['Name']['title'];
         final String title = (titleList != null && titleList.isNotEmpty)
             ? (titleList.first['plain_text'] ?? '')
             : '';
 
-        // ステータス：nullチェックを行う
         final String status =
             result['properties']['Status']['select']?['name'] ?? '';
 
-        // 期限（文字列の場合、そのまま保持。後で DateTime に変換するなど）
         final String? dueDateString =
             result['properties']['Due Date']?['date']?['start'];
         final DateTime? dueDate =
             dueDateString != null ? DateTime.tryParse(dueDateString) : null;
 
-        // 優先度：nullチェック
         final String priority =
             result['properties']['Priority']['select']?['name'] ?? '';
 
-        // 説明：同様に空リストの場合は空文字を返す
         final List<dynamic>? descriptionList =
             result['properties']['Description']?['rich_text'];
         final String description =
             (descriptionList != null && descriptionList.isNotEmpty)
                 ? (descriptionList.first['plain_text'] ?? '')
                 : '';
+
+        // タグ（Notion の multi_select プロパティの場合、リスト内の各要素の name を抽出）
+        final List<dynamic>? tagsList =
+            result['properties']['Tags']?['multi_select'];
+        final List<String> tags = tagsList != null
+            ? tagsList.map((tag) => tag['name'] as String).toList()
+            : [];
 
         tasks.add(Task.fromJson({
           'id': result['id'],
@@ -74,6 +75,7 @@ class NotionApiService {
           'due_date': dueDateString,
           'priority': priority,
           'description': description,
+          'tags': tags,
         }));
       }
       return tasks;
@@ -82,7 +84,6 @@ class NotionApiService {
     }
   }
 
-  // createTask(), updateTask(), deleteTask() は以前のコードと同様
   Future<void> createTask(Task task) async {
     if (_accessToken == null) throw Exception('Not authenticated with Notion');
     final url = 'https://api.notion.com/v1/pages';
@@ -114,6 +115,11 @@ class NotionApiService {
                     'text': {'content': task.description}
                   }
                 ]
+              : [],
+        },
+        'Tags': {
+          'multi_select': task.tags != null
+              ? task.tags!.map((tag) => {'name': tag}).toList()
               : [],
         },
       },
@@ -162,6 +168,11 @@ class NotionApiService {
                     'text': {'content': task.description}
                   }
                 ]
+              : [],
+        },
+        'Tags': {
+          'multi_select': task.tags != null
+              ? task.tags!.map((tag) => {'name': tag}).toList()
               : [],
         },
       },
