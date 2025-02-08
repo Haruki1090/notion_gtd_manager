@@ -60,50 +60,52 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login / Register')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Google サインインボタン
-            ElevatedButton.icon(
-              icon: const Icon(Icons.login),
-              label: const Text('Googleでサインイン'),
-              onPressed: _handleGoogleSignIn,
-            ),
-            const SizedBox(height: 20),
-            // メール認証用フォーム
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'メールアドレス',
-                border: OutlineInputBorder(),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ElevatedButton.icon(
+                icon: const Icon(Icons.login),
+                label: const Text('Googleでサインイン'),
+                onPressed: _handleGoogleSignIn,
               ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                labelText: 'パスワード',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'メールアドレス',
+                  border: OutlineInputBorder(),
+                ),
               ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _handleEmailAuth,
-              child: Text(_isRegisterMode ? '登録' : 'ログイン'),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _isRegisterMode = !_isRegisterMode;
-                });
-              },
-              child: Text(
-                  _isRegisterMode ? '既にアカウントをお持ちですか？ ログインはこちら' : '新規登録はこちら'),
-            ),
-          ],
+              const SizedBox(height: 12),
+              TextField(
+                controller: _passwordController,
+                decoration: const InputDecoration(
+                  labelText: 'パスワード',
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _handleEmailAuth,
+                child: Text(_isRegisterMode ? '登録' : 'ログイン'),
+              ),
+              const SizedBox(height: 10),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _isRegisterMode = !_isRegisterMode;
+                  });
+                },
+                child: Text(
+                    _isRegisterMode ? '既にアカウントをお持ちですか？ ログインはこちら' : '新規登録はこちら'),
+              ),
+            ],
+          ),
         ),
       ),
     );
