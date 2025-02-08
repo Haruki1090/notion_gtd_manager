@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "360844679877",
+    "project_id": "notion-gtd-manager",
+    "storage_bucket": "notion-gtd-manager.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360844679877:android:7943330d6bea820da8eeac",
+        "android_client_info": {
+          "package_name": "com.example.notion_gtd_manager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKCGcw86sxebAu_8fNmXiCGuk9qX7qN9I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
