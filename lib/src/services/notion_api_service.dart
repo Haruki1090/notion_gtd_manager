@@ -1,3 +1,4 @@
+// lib/src/services/notion_api_service.dart
 import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -38,14 +39,41 @@ class NotionApiService {
       final data = jsonDecode(response.body);
       List<Task> tasks = [];
       for (var result in data['results']) {
+        // タイトルの取得：リストが空の場合は空文字を返す
+        final List<dynamic>? titleList = result['properties']['Name']['title'];
+        final String title = (titleList != null && titleList.isNotEmpty)
+            ? (titleList.first['plain_text'] ?? '')
+            : '';
+
+        // ステータス：nullチェックを行う
+        final String status =
+            result['properties']['Status']['select']?['name'] ?? '';
+
+        // 期限（文字列の場合、そのまま保持。後で DateTime に変換するなど）
+        final String? dueDateString =
+            result['properties']['Due Date']?['date']?['start'];
+        final DateTime? dueDate =
+            dueDateString != null ? DateTime.tryParse(dueDateString) : null;
+
+        // 優先度：nullチェック
+        final String priority =
+            result['properties']['Priority']['select']?['name'] ?? '';
+
+        // 説明：同様に空リストの場合は空文字を返す
+        final List<dynamic>? descriptionList =
+            result['properties']['Description']?['rich_text'];
+        final String description =
+            (descriptionList != null && descriptionList.isNotEmpty)
+                ? (descriptionList.first['plain_text'] ?? '')
+                : '';
+
         tasks.add(Task.fromJson({
           'id': result['id'],
-          'title': result['properties']['Name']['title'][0]['plain_text'],
-          'status': result['properties']['Status']['select']['name'],
-          'due_date': result['properties']['Due Date']?['date']?['start'],
-          'priority': result['properties']['Priority']?['select']?['name'],
-          'description': result['properties']['Description']?['rich_text']?[0]
-              ?['plain_text'],
+          'title': title,
+          'status': status,
+          'due_date': dueDateString,
+          'priority': priority,
+          'description': description,
         }));
       }
       return tasks;
@@ -54,10 +82,10 @@ class NotionApiService {
     }
   }
 
+  // createTask(), updateTask(), deleteTask() は以前のコードと同様
   Future<void> createTask(Task task) async {
     if (_accessToken == null) throw Exception('Not authenticated with Notion');
     final url = 'https://api.notion.com/v1/pages';
-    // JSON ボディは Notion API の仕様に合わせて実装してください
     final body = jsonEncode({
       'parent': {'database_id': dotenv.env['NOTION_DATABASE_ID']},
       'properties': {
@@ -106,7 +134,6 @@ class NotionApiService {
 
   Future<void> updateTask(Task task) async {
     if (_accessToken == null) throw Exception('Not authenticated with Notion');
-    // Notion API は直接の更新がページごとに行えるので、PATCH リクエストを送信
     final url = 'https://api.notion.com/v1/pages/${task.id}';
     final body = jsonEncode({
       'properties': {
@@ -155,7 +182,6 @@ class NotionApiService {
 
   Future<void> deleteTask(String taskId) async {
     if (_accessToken == null) throw Exception('Not authenticated with Notion');
-    // Notion では完全な削除は API 経由では行えないため、アーカイブを利用するケースが多い
     final url = 'https://api.notion.com/v1/pages/$taskId';
     final body = jsonEncode({'archived': true});
     final response = await http.patch(
